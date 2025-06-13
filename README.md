@@ -19,16 +19,19 @@ When you click "Analyze Current Page," the extension's **content script** (`cont
 
 ### Analysis & Communication (Background Script)
 Once the data is collected by the content script, it's sent to the **background script** (`background/index.js`). The background script is responsible for:
+-   **Automatic Analysis Trigger:** The background script automatically triggers page data collection and security analysis whenever a new page is loaded or reloaded in an active tab.
 -   **Screenshot Capture:** Utilizing Chrome APIs to capture a screenshot of the current tab.
 -   **Groq API Communication:** Constructing a detailed prompt using the collected page data and the screenshot, and then sending it to the Groq LLM (specifically `llama3-70b-8192`). To manage token limits, large data fields (like arrays of forms, scripts, or network entries, and the screenshot itself) are truncated before being sent to the LLM.
 -   **Security Analysis:** The Groq LLM, acting as a cybersecurity expert, analyzes the provided data based on the STRIDE framework. It determines if the page appears secure, identifies affected STRIDE categories if not, explains the vulnerabilities, and suggests simple fixes.
--   **Result Delivery:** The LLM's analysis is then sent back to the popup script for display.
+-   **Result Delivery:** The LLM's analysis is then stored, and the popup script is automatically displayed if the analysis was triggered by a page load/reload.
 
 ### User Interface (Popup UI)
 -   The **popup UI** (`popup/App.jsx`, `popup/index.html`, `popup/index.css`) provides the user interface for the extension.
--   Users initiate the analysis by clicking the "Analyze Current Page" button. This button is styled as a prominent, interactive circle.
--   Upon completion, the security analysis results from the Groq LLM are displayed in a scrollable area within the popup. The output is formatted for readability, with bolded sections and properly rendered lists.
--   An "Analyze Again" button, styled as a standard rectangular button, appears after analysis to re-run the assessment.
+-   When an analysis is automatically triggered by a page load or reload, the popup will automatically appear displaying the analysis results.
+-   Users can also initiate a manual analysis by clicking the "Analyze Current Page" button. This button is styled as a prominent, interactive circle.
+-   Upon completion of any analysis, the security analysis results from the Groq LLM are displayed in a scrollable area within the popup. The output is formatted for readability, with bolded sections and properly rendered lists.
+-   An "Analyze Again" button, styled as a standard rectangular button, appears after analysis to re-run the assessment on the current page.
+-   When the extension popup is dismissed (e.g., by clicking outside it), its state will reset, allowing the "Analyze Current Page" button to be visible again upon the next manual opening.
 
 ## ▶️ Tech Stack
 -   **Browser Extension:** Manifest V3
@@ -68,12 +71,14 @@ Once the data is collected by the content script, it's sent to the **background 
 
 ## 🚀 Usage
 
-1.  Navigate to the web page you wish to analyze.
-2.  Click the STRIDE Design Review extension icon in your browser toolbar.
-3.  Click the large, circular "Analyze Current Page" button to initiate the security analysis.
-4.  Wait for the analysis to complete (a loading message will be displayed).
-5.  Review the STRIDE-based security findings and recommendations presented in the popup.
-6.  Click "Analyze Again" to re-run the analysis on the current page.
+1.  **Automatic Analysis:** The extension will automatically run a security analysis and display the results in a popup whenever you visit a new page or reload an existing one.
+2.  **Manual Analysis:**
+    a.  Navigate to the web page you wish to analyze.
+    b.  If the popup is not already open from an automatic analysis, click the STRIDE Design Review extension icon in your browser toolbar.
+    c.  Click the large, circular "Analyze Current Page" button to initiate the security analysis.
+    d.  Wait for the analysis to complete (a loading message will be displayed).
+    e.  Review the STRIDE-based security findings and recommendations presented in the popup.
+    f.  Click "Analyze Again" to re-run the analysis on the current page.
 
 ## 🔒 Security Considerations
 
