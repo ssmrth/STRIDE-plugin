@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "STRIDE Design Review",
+  "version": "1.0",
+  "description": "Automated STRIDE-based security analysis",
+  "permissions": [
+    "scripting",
+    "tabs",
+    "storage",
+    "activeTab",
+    "declarativeNetRequest",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://api.groq.com/*"
+  ],
+  "background": {
+    "service_worker": "background/index.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/index.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+} 

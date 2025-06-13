@@ -1,0 +1,199 @@
+.popup-container {
+  width: 400px;
+  height: 500px;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #ffffff;
+  color: #5d6d7e;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: #6196ca;
+  font-weight: 800;
+  font-family: 'Futura', 'Futura-Bold', sans-serif;
+  font-size: 3em;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+h2 {
+  font-size: 20px;
+  color: #4a69bd;
+  margin-bottom: 15px;
+}
+
+.analyze-button {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background-color: #87CEEB; /* Pastel blue */
+  color: white;
+  font-size: 2em;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  margin: auto; /* Center the button */
+  line-height: 1.2;
+}
+
+.analyze-button:hover {
+  background-color: #6a95e0;
+  transform: scale(1.05);
+  box-shadow: 0 12px 20px rgba(106, 149, 224, 0.6);
+}
+
+.analyze-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 5px 10px rgba(106, 149, 224, 0.4);
+}
+
+.analyze-again-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #88b0e8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 20px;
+  letter-spacing: 0.5px;
+}
+
+.analyze-again-button:hover {
+  background-color: #6a95e0;
+  transform: translateY(-2px);
+}
+
+.analyze-again-button:active {
+  transform: translateY(0);
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #aeb8c3;
+  font-size: 16px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.error {
+  padding: 15px;
+  background-color: #ffebee;
+  color: #c0392b;
+  border-radius: 6px;
+  margin: 10px 0;
+  border: 1px solid #ef9a9a;
+  font-size: 15px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.analysis-result {
+  margin-top: 25px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.analysis-content {
+  background-color: #e6f0fa;
+  padding: 18px;
+  border-radius: 8px;
+  margin-bottom: 0;
+  max-height: none;
+  overflow-y: auto;
+  border: 1px solid #d3e1f1;
+  line-height: 1.6;
+  font-size: 15px;
+  flex-grow: 1;
+}
+
+/* Custom Scrollbar Styles */
+.analysis-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.analysis-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.analysis-content::-webkit-scrollbar-thumb {
+  background: #aeb8c3;
+  border-radius: 10px;
+}
+
+.analysis-content::-webkit-scrollbar-thumb:hover {
+  background: #8895a5;
+}
+
+.analysis-content p {
+  margin: 0;
+  line-height: 1.6;
+  color: #5d6d7e;
+}
+
+.analysis-content p + p {
+  margin-top: 1em; /* Add space between consecutive paragraphs */
+}
+
+.analysis-content strong + p {
+  margin-top: 0; /* No space immediately after a strong tag (heading) */
+}
+
+.analysis-content ul,
+.analysis-content ol {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left: 20px;
+}
+
+.analysis-content li {
+  margin-bottom: 0.5em;
+}
+
+.security-status-box {
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.security-status-box.status-secure {
+  background-color: #A9D5AA;
+  box-shadow: 0 0 10px #A9D5AA, 0 0 15px #A9D5AA;
+}
+
+.security-status-box.status-insecure {
+  background-color: #F8B4B4;
+  box-shadow: 0 0 10px #F8B4B4, 0 0 15px #F8B4B4;
+}
+
+.security-status-box.status-unknown {
+  background-color: #FFE0B2;
+  box-shadow: 0 0 10px #FFE0B2, 0 0 15px #FFE0B2;
+} 
