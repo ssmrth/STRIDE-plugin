@@ -1,5 +1,5 @@
 // Directly set your Groq API key here
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = "gsk_##########################";
 
 function truncateArray(arr, max = 10) {
   if (!Array.isArray(arr)) return arr;
