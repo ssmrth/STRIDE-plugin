@@ -118,8 +118,77 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     (async () => {
       const screenshot = await captureScreenshot();
       const analysis = await analyzePageSecurity(request.pageData, screenshot);
+      // Store analysis results for popup (for manual analysis, don't force display on next load)
+      const securityStatus = (() => {
+        if (!analysis) return 'unknown';
+        const lowerCaseAnalysis = analysis.toLowerCase();
+        if (lowerCaseAnalysis.includes('insecure')) return 'insecure';
+        if (lowerCaseAnalysis.includes('secure')) return 'secure';
+        return 'unknown';
+      })();
+      await chrome.storage.local.set({ lastAnalysis: { analysis, securityStatus } });
       sendResponse({ analysis });
     })();
     return true;
   }
-}); 
+});
+
+// Listen for tab updates (page reloads or new page visits)
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  // Ensure the tab has completed loading and is a valid web page
+  if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) {
+    try {
+      console.log(`Tab updated: ${tab.url}. Attempting to run analysis.`);
+
+      // Execute content script to collect data
+      await chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        files: ['content/index.js']
+      });
+      
+      // Request data from content script
+      const pageData = await new Promise(resolve => {
+        chrome.tabs.sendMessage(tabId, { action: 'collectData' }, resolve);
+      });
+
+      if (!pageData) {
+        console.warn('Failed to collect page data for automatic analysis.');
+        return;
+      }
+
+      const screenshot = await captureScreenshot();
+      const analysis = await analyzePageSecurity(pageData, screenshot);
+
+      // Determine security status
+      const securityStatus = (() => {
+        if (!analysis) return 'unknown';
+        const lowerCaseAnalysis = analysis.toLowerCase();
+        if (lowerCaseAnalysis.includes('insecure')) return 'insecure';
+        if (lowerCaseAnalysis.includes('secure')) return 'secure';
+        return 'unknown';
+      })();
+
+      // Store analysis results and flag to indicate automatic trigger
+      await chrome.storage.local.set({ lastAnalysis: { analysis, securityStatus }, autoAnalysisTriggered: true });
+      console.log('Automatic analysis complete and stored.');
+
+      // Automatically open the popup
+      try {
+        await chrome.action.openPopup();
+        console.log('Extension popup opened automatically.');
+      } catch (e) {
+        console.warn('Could not open popup automatically:', e);
+      }
+
+    } catch (error) {
+      console.error('Error during automatic analysis:', error);
+    }
+  }
+});
+
+// Remove any problematic listeners that were previously added/removed incorrectly
+// This ensures a clean state for the background script.
+
+// The chrome.windows.onRemoved listener for popupWindowId is removed.
+// The chrome.runtime.onMessage.removeListener for 'clearAnalysisState' is also removed.
+// The popup will now handle clearing its own state directly in App.jsx. 

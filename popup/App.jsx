@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 
 function App() {
@@ -6,6 +6,35 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [securityStatus, setSecurityStatus] = useState(null);
+
+  // Load last analysis from storage when component mounts
+  useEffect(() => {
+    const loadLastAnalysis = async () => {
+      try {
+        const result = await chrome.storage.local.get(['lastAnalysis', 'autoAnalysisTriggered']);
+        // If there's a last analysis and it was triggered automatically, display it
+        if (result.lastAnalysis && result.autoAnalysisTriggered) {
+          setAnalysis(result.lastAnalysis.analysis);
+          setSecurityStatus(result.lastAnalysis.securityStatus);
+          // Immediately clear the stored analysis and flag so it doesn't persist for manual opens
+          await chrome.storage.local.remove(['lastAnalysis', 'autoAnalysisTriggered']);
+          console.log('Auto-triggered analysis displayed and state cleared for next open.');
+        } else {
+          // If not auto-triggered, or no analysis, ensure popup is in initial state
+          setAnalysis(null);
+          setSecurityStatus(null);
+        }
+      } catch (e) {
+        console.error('Error loading last analysis from storage:', e);
+      }
+    };
+
+    loadLastAnalysis();
+
+    // Removed the cleanup function (return () => { ... }) from previous attempts,
+    // as the state clearing is now handled directly within the loadLastAnalysis logic.
+
+  }, []); // Empty dependency array means this runs once on mount
 
   // Helper function to format the analysis output (simple Markdown-like parsing)
   const formatAnalysisOutput = (text) => {
@@ -162,6 +191,7 @@ function App() {
         <button 
           className="analyze-button"
           onClick={analyzeCurrentPage}
+          disabled={loading}
         >
           Analyze Current Page
         </button>
