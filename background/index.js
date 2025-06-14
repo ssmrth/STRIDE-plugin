@@ -80,7 +80,7 @@ You are a cybersecurity expert performing a security design review using the STR
 - E: Elevation of Privilege
 
 You are given DOM data, visible page content, and a screenshot. Your job is to:
-1. Determine if the page appears secure or not.
+1. Determine if the page appears secure or not. As the first line of your response, write "Secure" or "Insecure".
 2. If it's not secure, explain clearly which STRIDE categories are affected and why.
 3. Keep the explanation easy to understand for someone with basic security knowledge.
 4. Suggest simple fixes if possible.
@@ -159,12 +159,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       const screenshot = await captureScreenshot();
       const analysis = await analyzePageSecurity(pageData, screenshot);
 
-      // Determine security status
+      // Determine security status from the first line of LLM response
       const securityStatus = (() => {
         if (!analysis) return 'unknown';
-        const lowerCaseAnalysis = analysis.toLowerCase();
-        if (lowerCaseAnalysis.includes('insecure')) return 'insecure';
-        if (lowerCaseAnalysis.includes('secure')) return 'secure';
+        const firstLine = analysis.split('\n')[0].trim().toLowerCase();
+        if (firstLine === 'insecure') return 'insecure';
+        if (firstLine === 'secure') return 'secure';
         return 'unknown';
       })();
 

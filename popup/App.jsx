@@ -163,12 +163,12 @@ function App() {
       });
 
       setAnalysis(result.analysis);
-      // Determine security status from LLM analysis
+      // Determine security status from the first line of LLM response for immediate UI update
       if (result.analysis) {
-        const lowerCaseAnalysis = result.analysis.toLowerCase();
-        if (lowerCaseAnalysis.includes('insecure')) { // Prioritize 'insecure'
+        const firstLine = result.analysis.split('\n')[0].trim().toLowerCase();
+        if (firstLine === 'insecure') {
           setSecurityStatus('insecure');
-        } else if (lowerCaseAnalysis.includes('secure')) {
+        } else if (firstLine === 'secure') {
           setSecurityStatus('secure');
         } else {
           setSecurityStatus('unknown'); // Default or fallback status
