@@ -87,7 +87,3 @@ Once the data is collected by the content script, it's sent to the **background 
 -   Page data and screenshots are sent to the **Groq API** for LLM analysis. This data is handled by Groq in accordance with their privacy policy.
 -   No user-specific data or browsing history is stored locally by the extension or transmitted to any third parties beyond the Groq API for analysis purposes.
 -   The extension adheres to Chrome's Manifest V3 security best practices.
-
-## License
-
-MIT License # STRIDE-plugin
